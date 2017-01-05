@@ -6,7 +6,7 @@ parameters:
   ironic:
     server:
       enabled: true
-      version: ${_param:single_address}
+      version: ${_param:openstack_version}
       database:
         engine: mysql
         host: ${_param:single_address}
