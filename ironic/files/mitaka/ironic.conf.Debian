@@ -935,7 +935,7 @@ connection=mysql+pymysql://{{ server.database.user }}:{{ server.database.passwor
 
 # DHCP provider to use. "neutron" uses Neutron, and "none"
 # uses a no-op provider. (string value)
-#dhcp_provider=neutron
+#dhcp_provider=none
 
 
 [disk_partitioner]
