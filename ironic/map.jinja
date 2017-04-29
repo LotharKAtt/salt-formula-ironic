@@ -1,29 +1,21 @@
 
-{%- set source_engine = salt['pillar.get']('ironic:server:source:engine') %}
-
-{%- load_yaml as base_defaults %}
-{%- if source_engine == 'git' %}
-Debian:
-  pkgs:
-  - python-psycopg2
-  dir:
-    base: /srv/ironic/venv
-    home: /var/lib/ironic
-    workspace: /srv/ironic/workspace
-RedHat:
-  pkgs:
-  - python-psycopg2
-  dir:
-    base: /srv/ironic/venv
-    home: /var/lib/ironic
-    workspace: /srv/ironic/workspace
-{%- else %}
-Debian:
-  pkgs:
-  - ironic
-  dir:
-    base: /usr/lib/ironic
-{%- endif %}
-{%- endload %}
-
-{%- set server = salt['grains.filter_by'](base_defaults, merge=salt['pillar.get']('ironic:server')) %}
+{% set server = salt['grains.filter_by']({
+    'Debian': {
+        'pkgs': ['ironic-api', 'ironic-conductor', 'python-ironicclient'],
+        'services': ['ironic-api', 'ironic-conductor'],
+        'notification': False,
+        'identity': {
+            'engine': 'noauth',
+            'region': 'RegionOne',
+        },
+    },
+    'RedHat': {
+        'pkgs': ['ironic-api', 'ironic-conductor', 'python-ironicclient'],
+        'services': ['ironic-api', 'ironic-conductor'],
+        'notification': False,
+        'identity': {
+            'engine': 'noauth',
+            'region': 'RegionOne',
+        },
+    },
+}, merge=pillar.ironic.get('server', {})) %}
